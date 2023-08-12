@@ -1,0 +1,64 @@
+<CompuCell3D Revision="20210612" Version="4.2.5">
+   
+   <Metadata>
+      
+      <!-- Basic properties simulation -->
+      <NumberOfProcessors>1</NumberOfProcessors>
+      <DebugOutputFrequency>10</DebugOutputFrequency>
+      <!-- <NonParallelModule Name="Potts"/> -->
+   </Metadata>
+   
+   <Potts>
+      
+      <!-- Basic properties of CPM (GGH) algorithm -->
+      <Dimensions x="100" y="100" z="1"/>
+      <Steps>100000</Steps>
+      <Temperature>10.0</Temperature>
+      <NeighborOrder>1</NeighborOrder>
+      <Boundary_x>Periodic</Boundary_x>
+      <Boundary_y>Periodic</Boundary_y>
+   </Potts>
+   
+   <Plugin Name="CellType">
+      
+      <!-- Listing all cell types in the simulation -->
+      <CellType TypeId="0" TypeName="Medium"/>
+      <CellType TypeId="1" TypeName="bac"/>
+   </Plugin>
+   
+   <Plugin Name="Volume">
+      <VolumeEnergyParameters CellType="bac" LambdaVolume="1.0" TargetVolume="75"/>
+   </Plugin>
+   
+   <Plugin Name="Surface">
+   <SurfaceEnergyParameters CellType="bac" LambdaSurface="1.0" TargetSurface="28"/>
+</Plugin>
+
+   
+   
+   <Plugin Name="CenterOfMass">
+      
+      <!-- Module tracking center of mass of each cell -->
+   </Plugin>
+   
+   <Plugin Name="LengthConstraint">
+      
+      <!-- Applies elongation constraint to each cell. Users specify target length of major axis -TargetLength (in 3D additionally, target length of minor axis - MinorTargetLength) and a strength of the constraint -LambdaLength. Parameters are specified for each cell type -->
+      <!-- IMPORTANT: To prevent cell fragmentation for large elongations you need to also use connectivity constraint -->
+      <!-- LengthConstraint plugin with no body: <Plugin Name="LengthConstraint"/> permits constraint specification for individual cells -->
+      <!-- Comment out the constrains for cell types which don't need them -->
+      <LengthEnergyParameters CellType="bac" LambdaLength="1" TargetLength="30"/>
+   </Plugin>
+   
+   <Steppable Type="BlobInitializer">
+      
+      <!-- Initial layout of cells in the form of spherical (circular in 2D) blob -->
+      <Region>
+         <Center x="50" y="50" z="0"/>
+         <Radius>10</Radius>
+         <Gap>0</Gap>
+         <Width>5</Width>
+         <Types>bac</Types>
+      </Region>
+   </Steppable>
+</CompuCell3D>
